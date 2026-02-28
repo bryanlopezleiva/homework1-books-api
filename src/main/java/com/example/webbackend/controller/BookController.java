@@ -81,8 +81,8 @@ public class BookController {
             case "author":
                 bookComparator = Comparator.comparing(Book::getAuthor);
                 break;
-            case "title":
-                bookComparator = Comparator.comparing(Book::getTitle);
+            case "price":
+                bookComparator = Comparator.comparing(Book::getPrice);
                 break;
             default:
                 bookComparator = Comparator.comparing(Book::getTitle);
@@ -171,7 +171,7 @@ public class BookController {
     // advanced GET endpoint with filtering, sorting, and pagination combined in the valid order
     @GetMapping("/books/advanced")
     public List<Book> getAdvanced(@RequestParam(required = false, defaultValue = "")String title,
-                                  @RequestParam(required = false)Double minPrice,
+                                  @RequestParam(required = false) Double minPrice,
                                   @RequestParam(required = false) Double maxPrice,
                                   @RequestParam(required = false, defaultValue = "title") String sortBy,
                                   @RequestParam(required = false, defaultValue = "asc") String order,
@@ -182,9 +182,12 @@ public class BookController {
 
         /// here we are filtering the books
         List<Book> filteredBooks = books.stream()
-                .filter(book -> book.getTitle().isEmpty() || book.getTitle().toLowerCase().contains(title))
-                .filter(book -> book.getPrice() == null || book.getPrice() >= minPrice)
-                .filter(book -> book.getPrice() == null || book.getPrice() <= maxPrice)
+                .filter(book -> title.isEmpty() ||
+                        book.getTitle().toLowerCase().contains(title.toLowerCase()))
+                .filter(book -> minPrice == null ||
+                        (book.getPrice() != null && book.getPrice() >= minPrice))
+                .filter(book -> maxPrice == null ||
+                        (book.getPrice() != null && book.getPrice() <= maxPrice))
                 .collect(Collectors.toList());
 
         /// no we need to sort

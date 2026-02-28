@@ -7,7 +7,7 @@ public class Book
     private String author;
     private Double price;
 
-    public Book(Long id, String title, String author, double price) {
+    public Book(Long id, String title, String author, Double price) {
         this.id = id;
         this.title = title;
         this.author = author;
